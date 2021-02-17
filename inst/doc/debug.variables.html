@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+<meta name="date" content="2020-06-11" />
+
+<title>Using provenance to view variable values</title>
+
+
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Using provenance to view variable values</h1>
+<h4 class="date">June 11, 2020</h4>
+
+
+
+<p>During debugging, a programmer commonly wants to know the values of variables used in the program. Typically, the programmer either inserts print statements or sets breakpoints in order to view the variable values. When debugging with provenance, the user can instead look up the values in the recorded provenance without rerunning the program.</p>
+<p>The provDebugR package offers several functions that allow examining variables values:</p>
+<ul>
+<li><code>debug.line</code> shows the values of variables used and set on a specific line.</li>
+<li><code>debug.state</code> shows the values of all variables immediately following execution of a specific line</li>
+<li><code>debug.variable</code> shows all values that a variable took on during the execution of the script</li>
+<li><code>debug.view</code> uses the view panel to display variable values, which is more convenient for larger values like data frames.</li>
+</ul>
+<p>These functions may be called only after initialising the debugger using either <a href="Home.html"><code>prov.debug</code>, <code>prov.debug.run</code>, or <code>prov.debug.file</code></a>.</p>
+<div id="debug.line" class="section level2">
+<h2>debug.line</h2>
+<p>For each line number queried, <code>debug.line</code> returns a data frame containing information about the data that the procedure in that line inputs and outputs.</p>
+<p>Each data frame contains the following columns:</p>
+<ul>
+<li><code>name</code> The name of the variable</li>
+<li><code>value</code> The value of the variable, possibly abbreviated</li>
+<li><code>container</code> The type of the container of the data, such as list, data frame, etc.</li>
+<li><code>dimension</code> The size of the container.</li>
+<li><code>type</code> The data type(s) contained within the container.</li>
+</ul>
+</div>
+<div id="usage" class="section level2">
+<h2>Usage</h2>
+<p>The function signature for <code>debug.line</code> is:</p>
+<pre><code>debug.line(..., script.num = 1, all = FALSE)</code></pre>
+<p>The parameters of this function are:</p>
+<ul>
+<li><code>...</code> The line numbers to be queried</li>
+<li><code>script.num</code> The script numbers to be queried. Defaults to script number 1 (main script). If <code>script.num == &quot;all&quot;</code>, the main script and all sourced scripts will be queried.</li>
+<li><code>all</code> If TRUE, the inputs and outputs for all lines in all scripts will be returned.</li>
+</ul>
+<p>In the case of multiple queries, only 1 script number may be queried per function call.</p>
+<p>For example:</p>
+<pre><code>prov.debug.run(&quot;myScript.R&quot;)
+debug.line(5)
+debug.line(all = TRUE)
+debug.line(5, 10, script.num = 2)
+debug.line(3, script.num = &quot;all&quot;)</code></pre>
+</div>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>Let <code>myScript.R</code> be the following:</p>
+<pre><code>x &lt;- 1:3
+y &lt;- c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;)
+xy &lt;- data.frame(x, y, stringsAsFactors = FALSE)
+x</code></pre>
+<p>The result for <code>debug.line(3)</code> is:</p>
+<pre><code>Results for:
+  startLine scriptNum scriptName                                             code
+1         3         1 myScript.R xy &lt;- data.frame(x, y, stringsAsFactors = FALSE)
+
+$`1`
+$`1`$input
+  name       value container dimension      type
+1    x       1 2 3    vector         3   integer
+2    y &quot;a&quot; &quot;b&quot; &quot;c&quot;    vector         3 character
+
+$`1`$output
+  name     value  container dimension               type
+1   xy Row 1 1 a data_frame       3,2 integer, character</code></pre>
+<p>Variables <code>x</code> and <code>y</code> are listed in the ‘input’ table as they are used in the procedure.</p>
+<p>Variable <code>xy</code> is listed in the ‘output’ as the result from the procedure is assigned to that variable.</p>
+<p>If the line has only inputs or outputs, an <code>NA</code> will be put in the place of the data frame with no data nodes listed.</p>
+<p>If multiple lines are queried, the results for each line will be bound into a list.</p>
+</div>
+<div id="debug.state" class="section level2">
+<h2>debug.state</h2>
+<p>For each queried line, <code>debug.state</code> returns a data frame showing the state at that line, after it has been executed.</p>
+<p>Each data frame contains the following columns:</p>
+<ul>
+<li><code>name</code> The name of each variable.</li>
+<li><code>value</code> The value of each variable.</li>
+<li><code>container</code> The type of the container of each variable.</li>
+<li><code>dimension</code> The size of the container.</li>
+<li><code>type</code> The data type(s) contained within the container.</li>
+<li><code>scriptNum</code> The script number associated where the variable was assigned the value.</li>
+<li><code>scriptName</code> The name of the script in which the variable was assigned the value.</li>
+<li><code>startLine</code> The line number in which the variable was assigned the value.</li>
+</ul>
+<p>If no paramters are given, <code>debug.state</code> will return the state at the end of execution.</p>
+</div>
+<div id="usage-1" class="section level2">
+<h2>Usage</h2>
+<p>The function signature for <code>debug.state</code> is:</p>
+<pre><code>debug.state(..., script.num = 1)</code></pre>
+<p>The parameters of this function are:</p>
+<ul>
+<li><code>...</code> The line numbers to be queried.</li>
+<li><code>script.num</code> The script number of the queried line numbers. This is ignored if no line numbers are given. If <code>script.num == &quot;all&quot;</code>, the main script and all sourced scripts will be queried. Defaults to script number 1 (the main script).</li>
+</ul>
+<p>For example:</p>
+<pre><code>prov.debug.run(&quot;myScript.R&quot;)
+debug.state()
+debug.state(5)
+debug.state(10, 20, script.num = 2)
+debug.state(5, script.num = &quot;all&quot;)</code></pre>
+</div>
+<div id="examples" class="section level2">
+<h2>Examples</h2>
+<p>Let <code>myScript.R</code> be the following:</p>
+<pre><code>a &lt;- &quot;one&quot;
+a &lt;- 2L
+
+b &lt;- 3L
+b &lt;- &quot;four&quot;</code></pre>
+<p>When there are no parameters, <code>debug.state</code> returns the state at the end of execution.</p>
+<p>Therefore, the result for <code>debug.state()</code> is:</p>
+<pre><code>State at the end of execution:
+$`1`
+  name  value container dimension      type scriptNum scriptName startLine
+1    a      2    vector         1   integer         1 myScript.R         2
+2    b &quot;four&quot;    vector         1 character         1 myScript.R         5</code></pre>
+<p>When a line number is passed in, <code>debug.state</code> returns the state after the queried line has been executed.</p>
+<p>For example, the result for <code>debug.state(4)</code> is:</p>
+<pre><code>Results for:
+  startLine scriptNum
+1         4         1
+
+$`1`
+  name value container dimension    type scriptNum scriptName startLine
+1    a     2    vector         1 integer         1 myScript.R         2
+2    b     3    vector         1 integer         1 myScript.R         4</code></pre>
+<p>When multiple lines are queried, the results for each line are bound into a list.</p>
+</div>
+<div id="debug.variable" class="section level2">
+<h2>debug.variable</h2>
+<p>For each variable queried, <code>debug.variable</code> returns a data frame containing a row for each time that the variable is assigned.</p>
+<p>The data frame contains the following columns: * <code>value</code> The value of the variable. * <code>container</code> The type of the container of the variable. * <code>dimension</code> The size of the container. * <code>type</code> The data type(s) contained within the container. * <code>scriptNum</code> The script number where the assignment occurred * <code>scriptName</code> The name of the script where the assignment occurred * <code>startLine</code> The line number where the assignment occurred * <code>code</code> The line of code that did the assignment</p>
+</div>
+<div id="usage-2" class="section level2">
+<h2>Usage</h2>
+<p>The function signature for <code>debug.variable</code> is:</p>
+<pre><code>debug.variable(..., val.type = &quot;all&quot;, script.num = &quot;all&quot;, all = FALSE)</code></pre>
+<p>The parameters of this function are:</p>
+<ul>
+<li><code>...</code> The variable names to be queried.</li>
+<li><code>val.type</code> If not “all”, this filters the results to contain only instances where the valType (container or type) has the queried type.</li>
+<li><code>script.num</code> The script number of the queried variables. Defaults to “all”.</li>
+<li><code>all</code> If TRUE, results for all variables of the specified script will be returned.</li>
+</ul>
+<p>Only 1 script number and/or valType may be queried per function call.</p>
+<p>For example:</p>
+<pre><code>prov.debug.run(&quot;myScript.R&quot;)
+debug.variable(x)
+debug.variable(all = TRUE)
+debug.variable(&quot;a&quot;, b, &quot;x&quot;, val.type = &quot;logical&quot;)
+debug.variable(&quot;a&quot;, &quot;b&quot;, x, script.num = 3)</code></pre>
+</div>
+<div id="example-1" class="section level2">
+<h2>Example</h2>
+<p>Let <code>myScript.R</code> be the following:</p>
+<pre><code>a &lt;- &quot;one&quot;
+a &lt;- &quot;two&quot;
+a &lt;- 1L
+a &lt;- 2L
+
+b &lt;- 3L
+b &lt;- 4L
+b &lt;- &quot;five&quot;</code></pre>
+<p>The result for <code>debug.variable(&quot;a&quot;)</code> is:</p>
+<pre><code>$a
+  value container dimension      type scriptNum scriptName startLine       code
+1 &quot;one&quot;    vector         1 character         1 myScript.R         1 a &lt;- &quot;one&quot;
+2 &quot;two&quot;    vector         1 character         1 myScript.R         2 a &lt;- &quot;two&quot;
+3     1    vector         1   integer         1 myScript.R         3    a &lt;- 1L
+4     2    vector         1   integer         1 myScript.R         4    a &lt;- 2L</code></pre>
+</div>
+<div id="debug.view" class="section level2">
+<h2>debug.view</h2>
+<p><code>debug.view</code> displays the contents of each file or variable queried. For snapshots or files with the file extension of .csv or .txt, the data will be loaded into the debugger environment before it is viewed. Otherwise, the data will be viewed using the system’s default program for that type of file.</p>
+<p>Additionally, a data frame showing what the function has opened will be returned, which contains the following columns:</p>
+<ul>
+<li><code>name</code> The name of the variable or file being viewed.</li>
+<li><code>startLine</code> The line number where the variable was assigned, or the file was read or written.</li>
+<li><code>scriptNum</code> The script number where the variable was assigned, or the file was read or written.</li>
+<li><code>scriptName</code> The name of the script where the variable was assigned, or the file was read or written.</li>
+<li><code>title</code> The title of the variable or file as it appears in the view panel</li>
+<li><code>notes</code> Will display PARTIAL if the variable is a snapshot representing a partial value, such as part of a data frame. See the documentation on <a href="https://CRAN.R-project.org/package=rdtLite">rdtLite</a> to learn more about snapshots. It will also indicate if<br />
+a file is not found. NA indicates there are no special notes.</li>
+</ul>
+</div>
+<div id="usage-3" class="section level2">
+<h2>Usage</h2>
+<p>The function signature for <code>debug.view</code> is:</p>
+<pre><code>debug.view(..., start.line = &quot;all&quot;, script.num = &quot;all&quot;)</code></pre>
+<p>The parameters of this function are: * <code>...</code> The variable names or file names to be queried. If omitted, all variables and files are displayed. * <code>start.line</code> The line number of the queried variables or files. * <code>script.num</code> The script number of the queried variables or files.</p>
+<p>For example:</p>
+<pre><code>prov.debug.run(&quot;myScript.R&quot;)
+debug.view()
+debug.view(x)
+debug.view(&quot;x&quot;, y, start.line = 5, script.num = 2)</code></pre>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

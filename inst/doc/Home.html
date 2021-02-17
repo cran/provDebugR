@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+<meta name="date" content="2020-06-11" />
+
+<title>Introduction to Using Provenance to Debug with provDebugR</title>
+
+
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to Using Provenance to Debug with provDebugR</h1>
+<h4 class="date">June 11, 2020</h4>
+
+
+
+<p>provDebugR is a time-travelling debugging tool that leverages provenance and is created for use on R scripts.</p>
+<p>provDebugR uses provenance produced by <a href="https://CRAN.R-project.org/package=rdtLite">rdtLite</a>, a provenance collection library. This provenance is stored in <a href="https://github.com/End-to-end-provenance/ExtendedProvJson/blob/master/JSON-format.md">PROV-JSON format</a>, which follows the <a href="https://www.w3.org/Submission/2013/SUBM-prov-json-20130424/">W3 PROV-JSON standard</a>.</p>
+<div id="what-is-provenance" class="section level2">
+<h2>What is provenance?</h2>
+<p>Provenance is a detailed record of an execution of a script. This includes information about the steps that were excecuted and the intermediate data values that were used and/or created.</p>
+<p>provDebugR was created to promote the use of provenance in scientific analysis, to make data analysis more reproducible and transparent.</p>
+</div>
+<div id="why-provdebugr" class="section level2">
+<h2>Why provDebugR?</h2>
+<p>A typical debugger pauses execution at pre-determined points so a user can observe the execution environment. This functionality allows them to step through the program line-by-line and watch how variables change and observe where the flow of control leads.</p>
+<p>The main drawback about this is that the user is unable to go back to lines prior to the line they are on. If they wanted to observe the execution environment at a previous line, they must start the debugger from the beginning of execution. This can be very time-consumint and also makes it hard to debug non-deterministic scripts.</p>
+<p>By utilising provenance, provDebugR allows the user to observe the execution environment at any point in the script’s last execution, jumping back and forth between lines, as many times as they wish. It also allows for the tracking of variables throughout the script to observe type changes and connections to other variables.</p>
+</div>
+<div id="initialisation" class="section level1">
+<h1>Initialisation</h1>
+<p>Version 3.5.0 or later of R is required.</p>
+<p>provDebugR must be initialised using one of the following functions before the rest of its suite of functions becomes available.</p>
+<ul>
+<li>prov.debug.run</li>
+<li>prov.debug</li>
+<li>prov.debug.file</li>
+</ul>
+<div id="prov.debug.runscript-..." class="section level3">
+<h3><code>prov.debug.run(script, ...)</code></h3>
+<p><code>prov.debug.run</code> takes in the path to an R or Rmd script and executes the script using <a href="https://CRAN.R-project.org/package=rdtLite">rdtLite</a> to collect provenance before initialising the debugger.</p>
+<pre><code>library(provDebugR)
+prov.debug.run(&quot;myScript.R&quot;, snapshot.size = 100)</code></pre>
+</div>
+<div id="prov.debug" class="section level3">
+<h3><code>prov.debug()</code></h3>
+<p>Alternatively, if <a href="https://CRAN.R-project.org/package=rdtLite">rdtLite</a>’s <code>prov.run</code> function was just called, the provenence stored in memory can be used directly to initialise the debugger.</p>
+<pre><code>library(rdtLite)
+library(provDebugR)
+prov.run(&quot;myScript.R&quot;, snapshot.size = 100)
+prov.debug()</code></pre>
+</div>
+<div id="prov.debug.file" class="section level3">
+<h3><code>prov.debug.file</code></h3>
+<p>Lastly, the debugger may also be initialised using a PROV-JSON provenance file that was created by an earlier execution of rdtLite.</p>
+<pre><code>library(rdtLite)
+prov.debug.file(&quot;provJsonFileName.json&quot;)</code></pre>
+</div>
+</div>
+<div id="other-provdebugr-functions" class="section level1">
+<h1>Other provDebugR Functions</h1>
+<p>After the debugger has been initialised, the rest of provDebugR’s suite of functions may be used.</p>
+<div id="functions-to-help-debug-error-and-warning-messages" class="section level2">
+<h2>Functions to help debug error and warning messages</h2>
+<div id="debug.error-debug.warning-and-debug.type.changes" class="section level3">
+<h3><a href="debug.errors.html"><code>debug.error, debug.warning and debug.type.changes</code></a></h3>
+<p>These functions provide help in finding the code that led to an error or warning message. <code>debug.error</code> also helps find advice on Stack Overflow for the errors encountered. <code>debug.type.changes</code> looks for situations where the type of a variable changes as that may be an indication of a programming problem, such as when a value that a programmer expects to be a single integer turns out to be a long vector of integers.</p>
+</div>
+</div>
+<div id="functions-to-display-variable-values-at-different-points-of-execution" class="section level2">
+<h2>Functions to display variable values at different points of execution</h2>
+<div id="debug.line-debug.state-debug.variable-and-debug.view" class="section level3">
+<h3><a href="debug.variables.html"><code>debug.line, debug.state, debug.variable, and debug.view</code></a></h3>
+<p>These functions allow the user to see the values of variables at different points of execution in the program, without the need to add breakpoints or print statements and re-run the program. The functions vary in what they query and the format of the outpu.</p>
+</div>
+</div>
+<div id="function-to-display-the-lineage-of-a-data-object" class="section level2">
+<h2>Function to display the lineage of a data object</h2>
+<div id="debug.lineage" class="section level3">
+<h3><a href="debug.lineage.html"><code>debug.lineage</code></a></h3>
+<p>This function is used to show how a data object was used, or how it was produced. It shows just the lines of code that actually contribute to the value a variable has, or that depend either directly or indirectly on the value that a variale has.</p>
+</div>
+</div>
+<div id="end-to-end-provenance" class="section level2">
+<h2>End-to-end Provenance</h2>
+<p>provDebugR is one of several tools created in the end-to-end provenance group. You can find out more about our project <a href="https://end-to-end-provenance.github.io/">here</a>.</p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
