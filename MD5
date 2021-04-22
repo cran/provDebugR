@@ -1,4 +1,4 @@
-4cc01655c957dc3c5ea77973ce5439b3 *DESCRIPTION
+e8d3bceac78693a5a634ae1904da55b5 *DESCRIPTION
 4c0d2bd03688bc5d33c9c393ff863b96 *NAMESPACE
 af6ae74f0d522be94898100aad96538c *R/debugExceptions.R
 f7d5906658e4d72d96db177936f820b0 *R/debugInit.R
@@ -10,15 +10,15 @@ badc425bcc18463f4b2e4ae8df600119 *R/debugTypeChanges.R
 75768bd1a13e7b0de4f9431803846356 *R/debugVariable.R
 e9e0fcf5e1807d4b163d80344b69115d *R/debugView.R
 01e36de58c834d9bab084c9c9d0d8f8a *README.md
-8bf601b1a6b3488da10809d3037b0494 *build/vignette.rds
+ccc728e6561e36add6a959f4919ffa9c *build/vignette.rds
 292f844a7914575ba835014265a8092f *inst/doc/Home.Rmd
-bdfe1eff2be9def1bc8a88342d7e9b34 *inst/doc/Home.html
+4c7cded5ce24e4507793dbea0bbebf5e *inst/doc/Home.html
 bfcbcee2f2e866c7a70fc7c8425d8849 *inst/doc/debug.errors.Rmd
-a1dceee1f0e543cfeb19e41c3a626754 *inst/doc/debug.errors.html
+c8b21de47b3250d5f52db000acbc1af9 *inst/doc/debug.errors.html
 f2ad1a626b039f8ace9cc7d737a60e38 *inst/doc/debug.lineage.Rmd
-938aa88812a73efc016d159f90551373 *inst/doc/debug.lineage.html
+ca8b21bbdebb54086b793a7651572150 *inst/doc/debug.lineage.html
 643c1f62ef43439add764c9dc5fa1a8d *inst/doc/debug.variables.Rmd
-d0083dedac9d0c2d27112ff9af6d502f *inst/doc/debug.variables.html
+2cb31d50493b05d5caa52e27a41169b8 *inst/doc/debug.variables.html
 748de2cea66d91410660b4bb02bf408c *inst/testdata/df1.csv
 d57b89d7bc9a59cc5d903c7671741877 *inst/testdata/empty.json
 b29d76bc6bf766c29e18c0b92b8822fc *inst/testdata/exceptions.json

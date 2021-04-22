@@ -1,7 +1,7 @@
 Package: provDebugR
 Title: A Time-Travelling Debugger
-Version: 1.0
-Date: 2021-02-16
+Version: 1.0.1
+Date: 2021-04-20
 Authors@R: c(
     person("Orenna", "Brand", email = "o.brand@columbia.edu", role = "aut"),
     person("Elizabeth", "Fong", email = "fong22e@mtholyoke.edu", role = "aut"),
@@ -18,14 +18,13 @@ Description: Uses provenance post-execution to help the user understand
 Depends: R (>= 3.5.0)
 License: GPL-3
 Encoding: UTF-8
-LazyData: true
 Imports: httr, jsonlite, provGraphR, provParseR, textutils,
-Suggests: knitr, rdtLite, rdt, testthat
+Suggests: knitr, rdtLite, rdt, rmarkdown, testthat
 Additional_repositories: https://end-to-end-provenance.github.io/drat/
 VignetteBuilder: knitr
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 NeedsCompilation: no
-Packaged: 2021-02-16 23:29:16 UTC; blerner
+Packaged: 2021-04-21 20:41:05 UTC; blerner
 Author: Orenna Brand [aut],
   Elizabeth Fong [aut],
   Barbara Lerner [cre],
@@ -34,4 +33,4 @@ Author: Orenna Brand [aut],
   Emery Boose [aut]
 Maintainer: Barbara Lerner <blerner@mtholyoke.edu>
 Repository: CRAN
-Date/Publication: 2021-02-17 19:40:06 UTC
+Date/Publication: 2021-04-22 15:00:05 UTC
